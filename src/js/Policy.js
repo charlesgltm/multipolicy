@@ -46,14 +46,9 @@ var Policy = Class.create({
                         })
                     }
                     else {
-                        var myForm = Functions.splitSerializeForm("policyTabForm");
                         Policy.calculateTotalPolicy();
-                        
-                        if (myForm['policyType'] == 1 && Policy.getTotalPolicy() >= 1) {
-                            document.getElementById("policyDialog").innerHTML = '<b>Policy Type Single</b> can only have one policy.';
-                            Functions.initDialog("policyDialog", "Information", 250, 150);
-                        }
-                        else {
+                        PolicyType.validate();
+                        if (PolicyType.policyTypeValid) {
                             jQuery("#addPolicyFormDialog").dialog("open");
                             Policy.loadPolicyForm();
                         }

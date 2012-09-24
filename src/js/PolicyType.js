@@ -25,9 +25,13 @@ var PolicyType = Class.create({
                 if (PolicyType.getId() != '') {
                     document.getElementById("policyDialog").innerHTML = response.responseText;
                     Functions.initDialog("policyDialog", "Information", 300, 200);
+                    Customer.updatePolicyType();
                 }
                 else {
-                    document.getElementById("policyDialog").innerHTML = 'Policy Type can not be empty.';
+                    var customerData = Customer.getCustomerDetails();
+                    document.policyTabForm['policyType'].selectedIndex = customerData['package_id'];
+                    PolicyType.setId(customerData['package_id']);
+                    document.getElementById("policyDialog").innerHTML = '<b>Policy Type can not be empty.</b>';
                     Functions.initDialog("policyDialog", "Information", 300, 150);
                 }
             }
@@ -36,21 +40,23 @@ var PolicyType = Class.create({
     
     validate: function() {
         var policyTypeValid = false;
-        new Ajax.Request(this.getAjaxUrl(), {
-            asynchronous: false,
-            method: 'get',
-            parameters: 'get=validate&custId=' + Customer.getId() + '&policyTypeId=' + this.getId(),
-            onSuccess: function(response) {
-                if (response.responseText != '') {
-                    document.getElementById("policyDialog").innerHTML = '<span style="font-weight: bold; color: #FF1437">' + response.responseText + '</span>';
-                    Functions.initDialog("policyDialog", "Information", 320, 200);
-                    policyTypeValid = false;
+        if ([1, 2, 3].indexOf(parseInt(this.getId())) >= 0) {
+            new Ajax.Request(this.getAjaxUrl(), {
+                asynchronous: false,
+                method: 'get',
+                parameters: 'get=validate&custId=' + Customer.getId() + '&policyTypeId=' + this.getId(),
+                onSuccess: function(response) {
+                    if (response.responseText != '') {
+                        document.getElementById("policyDialog").innerHTML = '<span style="font-weight: bold; color: #FF1437">' + response.responseText + '</span>';
+                        Functions.initDialog("policyDialog", "Information", 350, 150);
+                        policyTypeValid = false;
+                    }
+                    else {
+                        policyTypeValid = true;
+                    }
                 }
-                else {
-                    policyTypeValid = true;
-                }
-            }
-        })
+            })
+        }
         this.policyTypeValid = policyTypeValid;
     }
 })

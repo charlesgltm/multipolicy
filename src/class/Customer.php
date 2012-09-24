@@ -98,7 +98,7 @@ class Customer {
     public function updateInstallment($installment) {
         $customer = self::getCustomerDetails();
         $first = ($customer['total_premium'] / $installment) + ($customer['policy_cost'] + $customer['stamp_duty'] + $customer['admin_fee']);
-        $next = ($installment === 1) ? $customer['total_premium'] / $installment : 0;
+        $next = ($installment == 1) ? 0 : $customer['total_premium'] / $installment;
         $query = sprintf("UPDATE customers
                           SET
                             installment=%d,
@@ -110,7 +110,6 @@ class Customer {
                           $next,
                           self::getId());
         MySQL::setQuery($query);
-        echo MySQL::getQuery();
         if (MySQL::execute())
             return true;
         return false;

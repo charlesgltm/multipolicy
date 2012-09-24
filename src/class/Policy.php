@@ -59,7 +59,7 @@ class Policy {
             <div id="updatePolicyFormDialog"></div>
             <form name="policyTabForm" id="policyTabForm">
                 <div id="policyTypeOption" style="margin-bottom: 10px">
-                    Policy Type : <select name="policyType" class="input-text" onchange="PolicyType.setId(this.value);Customer.updatePolicyType()" onkeyup="PolicyType.setId(this.value);PolicyType.getRules();Customer.updatePolicyType()">'. $policyType->getOptions() .'</select>
+                    Policy Type : <select name="policyType" class="input-text" onchange="PolicyType.setId(this.value);PolicyType.getRules();" onkeyup="PolicyType.setId(this.value);PolicyType.getRules();">'. $policyType->getOptions() .'</select>
                 </div>
                 <div id="policyInformation"></div>
                 <div id="listPolicy"></div>

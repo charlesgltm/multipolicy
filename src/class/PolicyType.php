@@ -105,7 +105,7 @@ class PolicyType {
                                   $customer->getId());
                 MySQL::setQuery($query);
                 $gender = MySQL::getNumRows();
-                if (($num['count'] > 2) || ($gender == 1 && $num['count'] >= 2)) {
+                if (($num['count'] >= 2) || ($gender == 1 && $num['count'] >= 2)) {
                     $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita.<br />Harap hapus sebagian tertanggung yang telah terdaftar.';
                     break;
                 }

@@ -35,9 +35,8 @@ var Customer = Class.create ({
                 method: 'post',
                 parameters: 'act=updatePolicyType&custId=' + Customer.getId() + '&policyTypeId=' + PolicyType.getId(),
                 onSuccess: function() {
-                        Customer.updateCost();
-                        Policy.getPolicy();
-                        PolicyType.getRules();
+                    Customer.updateCost();
+                    Policy.getPolicy();
                 }
             })
         }
