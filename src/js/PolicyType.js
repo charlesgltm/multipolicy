@@ -38,13 +38,13 @@ var PolicyType = Class.create({
         })
     },
     
-    validate: function() {
+    validate: function(action) {
         var policyTypeValid = false;
         if ([1, 2, 3].indexOf(parseInt(this.getId())) >= 0) {
             new Ajax.Request(this.getAjaxUrl(), {
                 asynchronous: false,
                 method: 'get',
-                parameters: 'get=validate&custId=' + Customer.getId() + '&policyTypeId=' + this.getId(),
+                parameters: 'get=validate&action=' + action + '&custId=' + Customer.getId() + '&policyTypeId=' + this.getId(),
                 onSuccess: function(response) {
                     if (response.responseText != '') {
                         document.getElementById("policyDialog").innerHTML = '<span style="font-weight: bold; color: #FF1437">' + response.responseText + '</span>';

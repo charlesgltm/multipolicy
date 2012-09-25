@@ -85,5 +85,9 @@ class Functions {
         }
         return;
     }
+    
+    public static function _bccomp($i, $j, $operator = '>=') {
+        return version_compare(bccomp($i, $j), 0, $operator);
+    }
 }
 ?>
