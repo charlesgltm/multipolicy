@@ -29,7 +29,7 @@ var Customer = Class.create ({
     },
     
     updatePolicyType: function() {
-        PolicyType.validate();
+        PolicyType.validate('change');
         if (PolicyType.policyTypeValid) {
             new Ajax.Request(this.getAjaxUrl(), {
                 method: 'post',

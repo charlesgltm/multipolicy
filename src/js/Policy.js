@@ -47,7 +47,7 @@ var Policy = Class.create({
                     }
                     else {
                         Policy.calculateTotalPolicy();
-                        PolicyType.validate();
+                        PolicyType.validate('add');
                         if (PolicyType.policyTypeValid) {
                             jQuery("#addPolicyFormDialog").dialog("open");
                             Policy.loadPolicyForm();
