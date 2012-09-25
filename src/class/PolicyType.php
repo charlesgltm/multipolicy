@@ -77,6 +77,7 @@ class PolicyType {
     public function validate(Customer $customer) {
         $customer->setId($_REQUEST['custId']);
         $info = '';
+        $operator = ($_REQUEST['action'] == 'add') ? '>=' : '>';
         switch ($this->getId()) {
             case 1: // Single
                 $query = sprintf("SELECT COUNT(policies.id) as count
@@ -85,7 +86,7 @@ class PolicyType {
                                   $customer->getId());
                 MySQL::setQuery($query);
                 $num = MySQL::fetchRow();
-                if ($num['count'] >= 1) {
+                if (Functions::_bccomp($num['count'], 1, $operator)) {
                     $info = 'Policy Type Single hanya boleh memiliki 1 tertanggung.<br />Harap hapus sebagian tertanggung yang telah terdaftar.';
                     break;
                 }
@@ -105,7 +106,7 @@ class PolicyType {
                                   $customer->getId());
                 MySQL::setQuery($query);
                 $gender = MySQL::getNumRows();
-                if (($num['count'] > 2) || ($gender == 1 && $num['count'] > 2)) {
+                if ((Functions::_bccomp($num['count'], 2, $operator) || ($gender == 1 && Functions::_bccomp($num['count'], 2, $operator)))) {
                     $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita.<br />Harap hapus sebagian tertanggung yang telah terdaftar.';
                     break;
                 }
