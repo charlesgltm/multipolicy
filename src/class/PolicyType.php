@@ -106,9 +106,16 @@ class PolicyType {
                                   $customer->getId());
                 MySQL::setQuery($query);
                 $gender = MySQL::getNumRows();
-                if (Functions::_bccomp($num['count'], 2, $operator) || $gender == 1) {
+                if (Functions::_bccomp($num['count'], 2, $operator) or (Functions::_bccomp($num['count'], 2, $operator) and $gender == 1)) {
                     $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita.<br />Harap hapus sebagian tertanggung yang telah terdaftar.';
                     break;
+                }
+                
+                if ($_REQUEST['action'] == 'change') {
+                    if (Functions::_bccomp($num['count'], 1, $operator) and $gender == 1) {
+                        $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita.<br />Harap hapus sebagian tertanggung yang telah terdaftar.';
+                        break;
+                    }
                 }
                 break;
         }
