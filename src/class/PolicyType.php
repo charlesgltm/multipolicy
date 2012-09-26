@@ -122,23 +122,26 @@ class PolicyType {
         return $info;
     }
     
-    public function validateGender(Customer $customer, Policy $policy) {
+    public function validateGender(Customer $customer, Policy $policy, Gender $gender) {
         $customer->setId($_REQUEST['custId']);
         $policy->setId($_REQUEST['policyId']);
+        $gender->setId($_REQUEST['postGender']);
+        $dataGender = $gender->getGenderDetails();
         $info = '';
         
         switch ($this->getId()) {
             case 2: // Couple
                 $query = sprintf("SELECT DISTINCT(policies.gender)
                                   FROM policies
-                                  WHERE policies.customer_id=%d
-                                  AND policies.id<>%d",
-                                  $customer->getId(),
-                                  $policy->getId());
+                                  WHERE policies.customer_id=%d",
+                                  $customer->getId());
                 MySQL::setQuery($query);
-                MySQL::getQuery(true);
-                if (MySQL::getNumRows() > 2) {
-                    $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita bro.';
+                $data = MySQL::fetchRows();
+                $info .= var_dump($data);
+                //unset($data[$_REQUEST['postGender']]);
+                //$info = var_dump($data);
+                if (count($data)) {
+                    $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita.';
                     break;
                 }
                 break;

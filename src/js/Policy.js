@@ -254,7 +254,8 @@ var Policy = Class.create({
     },
     
     update: function() {
-        PolicyType.validateGender();
+        var policyForm = Functions.splitSerializeForm("updatePolicyForm");
+        PolicyType.validateGender(policyForm['policy_gender']);
         if (PolicyType.genderValid) {
             new Ajax.Request(this.getAjaxUrl(), {
                 method: 'post',
