@@ -24,7 +24,7 @@ class Policy {
         ';
     }
     
-    public function getPolicy() {
+    public function getPolicyDetails() {
         $query = sprintf("SELECT policies.*
                           FROM policies
                           WHERE policies.id=%d",
@@ -284,7 +284,7 @@ class Policy {
     }
     
     public function updateForm(Gender $gender, Job $job, Package $package) {
-        $policy = self::getPolicy();
+        $policy = self::getPolicyDetails();
         $gender->setGender($policy['gender']);
         $job->setId($policy['job_id']);
         $package->setId($policy['package_id']);

@@ -7,11 +7,15 @@ if ($_REQUEST['policyId']) {
 }
 
 switch ($_GET['get']) {
+    case 'policyDetails':
+        echo json_encode($policy->getPolicyDetails());
+        break;
+    
     case 'activatingTab':
         $policy->showTab(new PolicyType(), new Customer());
         break;
     
-    case 'getPolicy':
+    case 'listPolicy':
         echo $policy->listPolicy(new Customer());
         break;
     

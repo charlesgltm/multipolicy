@@ -20,7 +20,7 @@ var Customer = Class.create ({
         new Ajax.Request(this.getAjaxUrl(), {
             asynchronous: false,
             method: 'get',
-            parameters: 'get=customerDetails&custId=' + Customer.getId(),
+            parameters: 'get=customerDetails&custId=' + this.getId(),
             onSuccess: function(response) {
                 data = response.responseText;
             }
@@ -36,7 +36,7 @@ var Customer = Class.create ({
                 parameters: 'act=updatePolicyType&custId=' + Customer.getId() + '&policyTypeId=' + PolicyType.getId(),
                 onSuccess: function() {
                     Customer.updateCost();
-                    Policy.getPolicy();
+                    Policy.listPolicy();
                 }
             })
         }

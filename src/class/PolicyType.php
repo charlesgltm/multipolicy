@@ -106,8 +106,32 @@ class PolicyType {
                                   $customer->getId());
                 MySQL::setQuery($query);
                 $gender = MySQL::getNumRows();
-                if ((Functions::_bccomp($num['count'], 2, $operator) || ($gender == 1 && Functions::_bccomp($num['count'], 2, $operator)))) {
+                if (Functions::_bccomp($num['count'], 2, $operator) || $gender == 1) {
                     $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita.<br />Harap hapus sebagian tertanggung yang telah terdaftar.';
+                    break;
+                }
+                break;
+        }
+        return $info;
+    }
+    
+    public function validateGender(Customer $customer, Policy $policy) {
+        $customer->setId($_REQUEST['custId']);
+        $policy->setId($_REQUEST['policyId']);
+        $info = '';
+        
+        switch ($this->getId()) {
+            case 2: // Couple
+                $query = sprintf("SELECT DISTINCT(policies.gender)
+                                  FROM policies
+                                  WHERE policies.customer_id=%d
+                                  AND policies.id<>%d",
+                                  $customer->getId(),
+                                  $policy->getId());
+                MySQL::setQuery($query);
+                MySQL::getQuery(true);
+                if (MySQL::getNumRows() > 2) {
+                    $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita bro.';
                     break;
                 }
                 break;

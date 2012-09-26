@@ -16,6 +16,19 @@ var Policy = Class.create({
         return this.id;
     },
     
+    getPolicyDetails: function() {
+        var data = null;
+        new Ajax.Request(this.getAjaxUrl(), {
+            asynchronous: false,
+            method: 'get',
+            parameters: 'get=policyDetails&policyId=' + this.getId(),
+            onSuccess: function(response) {
+                data = response.responseText;
+            }
+        });
+        return(data.evalJSON());
+    },
+    
     activatingTab: function() {
         if (typeof Calculator !== 'object')
             Calculator = new Calculator;
@@ -54,7 +67,7 @@ var Policy = Class.create({
                         }
                     }
                 });
-                Policy.getPolicy();
+                Policy.listPolicy();
                 Functions.initConfirmationDialog("dialogDeletePolicy", "Delete Policy", 330, 160, function() {
                     Policy.del();
                 });
@@ -81,10 +94,10 @@ var Policy = Class.create({
         return this.totalPolicy;
     },
     
-    getPolicy: function() {
+    listPolicy: function() {
         new Ajax.Request(this.getAjaxUrl(), {
             method: 'get',
-            parameters: 'get=getPolicy&custId=' + Customer.getId(),
+            parameters: 'get=listPolicy&custId=' + Customer.getId(),
             onLoading: function() {
                 document.getElementById("listPolicy").innerHTML = '<p class="info" style="text-align: center">Getting customer data</p>';
             },
@@ -166,9 +179,9 @@ var Policy = Class.create({
                     jQuery("#addPolicyInformation").addClass("info");
                     setTimeout(function() {
                         jQuery("#addPolicyFormDialog").dialog('close');
-                    }, 3000);
+                    }, 2000);
                     Customer.updateCost();
-                    Policy.getPolicy();
+                    Policy.listPolicy();
                 }
                 else {
                     document.getElementById("addPolicyInformation").innerHTML = 'Failed to add new policy. Please try again.';
@@ -184,6 +197,8 @@ var Policy = Class.create({
     },
     
     loadUpdateForm: function() {
+        var policyData = this.getPolicyDetails();
+        Job.setId(policyData['job_id']);
         new Ajax.Request(this.getAjaxUrl(), {
             method: 'get',
             parameters: 'get=loadUpdateForm&policyId=' + Policy.getId(),
@@ -239,25 +254,28 @@ var Policy = Class.create({
     },
     
     update: function() {
-        new Ajax.Request(this.getAjaxUrl(), {
-            method: 'post',
-            parameters: Form.serialize("updatePolicyForm"),
-            onSuccess: function(response) {
-                if (response.responseText === 'true') {
-                    document.getElementById("updatePolicyInformation").innerHTML = 'Policy successfully updated.';
-                    jQuery("#updatePolicyInformation").addClass("info");
-                    setTimeout(function() {
-                        jQuery("#updatePolicyFormDialog").dialog('close');
-                    }, 3000);
-                    Customer.updateCost();
-                    Policy.getPolicy();
+        PolicyType.validateGender();
+        if (PolicyType.genderValid) {
+            new Ajax.Request(this.getAjaxUrl(), {
+                method: 'post',
+                parameters: Form.serialize("updatePolicyForm"),
+                onSuccess: function(response) {
+                    if (response.responseText === 'true') {
+                        document.getElementById("updatePolicyInformation").innerHTML = 'Policy successfully updated.';
+                        jQuery("#updatePolicyInformation").addClass("info");
+                        setTimeout(function() {
+                            jQuery("#updatePolicyFormDialog").dialog('close');
+                        }, 2000);
+                        Customer.updateCost();
+                        Policy.listPolicy();
+                    }
+                    else {
+                        document.getElementById("updatePolicyInformation").innerHTML = 'Failed to update policy. Please try again.';
+                        jQuery("#updatePolicyInformation").addClass("error");
+                    }
                 }
-                else {
-                    document.getElementById("updatePolicyInformation").innerHTML = 'Failed to update policy. Please try again.';
-                    jQuery("#updatePolicyInformation").addClass("error");
-                }
-            }
-        })
+            })
+        }
     },
     
     del: function() {
@@ -270,7 +288,7 @@ var Policy = Class.create({
                 
                 if (response.responseText === 'true') {
                     Customer.updateCost();
-                    Policy.getPolicy();
+                    Policy.listPolicy();
                     document.getElementById("policyInformation").innerHTML = 'Policy was deleted.';
                     jQuery("#policyInformation").addClass("info");
                 }
