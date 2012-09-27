@@ -127,22 +127,25 @@ class PolicyType {
         $policy->setId($_REQUEST['policyId']);
         $gender->setId($_REQUEST['postGender']);
         $dataGender = $gender->getGenderDetails();
+        $gender->setGender($dataGender['list_data']);
         $info = '';
         
         switch ($this->getId()) {
             case 2: // Couple
-                $query = sprintf("SELECT DISTINCT(policies.gender)
-                                  FROM policies
-                                  WHERE policies.customer_id=%d",
-                                  $customer->getId());
-                MySQL::setQuery($query);
-                $data = MySQL::fetchRows();
-                $info .= var_dump($data);
-                //unset($data[$_REQUEST['postGender']]);
-                //$info = var_dump($data);
-                if (count($data)) {
-                    $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita.';
-                    break;
+                $custPolicies = $policy->getCustomerPolicy($customer->getId());
+                if (count($custPolicies) == 1) {
+                    if (($custPolicies[0]['gender'] == $gender->getGender()) && $_REQUEST['action'] == 'add') {
+                        $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita.';
+                        break;
+                    }
+                }
+                elseif (count($custPolicies) > 1) {
+                    $dataPolicy = $policy->getPolicyDetails();
+                    $info = $gender->getGender();
+                    if ($dataPolicy['gender'] == $gender->getGender()) {
+                        $info = 'Policy Type Couple harus terdiri dari 1 Pria dan 1 Wanita.';
+                        break;
+                    }
                 }
                 break;
         }

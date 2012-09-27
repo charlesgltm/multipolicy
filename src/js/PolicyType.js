@@ -61,12 +61,12 @@ var PolicyType = Class.create({
         this.policyTypeValid = policyTypeValid;
     },
     
-    validateGender: function(postGender) {
+    validateGender: function(postGender, action) {
         var isValid = false;
         new Ajax.Request(this.getAjaxUrl(), {
             asynchronous: false,
             method: 'get',
-            parameters: 'get=validateGender&postGender=' + postGender + '&custId=' + Customer.getId() + '&policyId=' + Policy.getId() + '&policyTypeId=' + this.getId(),
+            parameters: 'get=validateGender&action=' + action + '&postGender=' + postGender + '&custId=' + Customer.getId() + '&policyId=' + Policy.getId() + '&policyTypeId=' + this.getId(),
             onSuccess: function(response) {
                 if (response.responseText != '') {
                     document.getElementById("policyDialog").innerHTML = '<span style="font-weight: bold; color: #FF1437">' + response.responseText + '</span>';

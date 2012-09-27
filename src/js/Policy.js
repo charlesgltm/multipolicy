@@ -167,28 +167,32 @@ var Policy = Class.create({
     },
     
     add: function() {
-        new Ajax.Request(this.getAjaxUrl(), {
-            method: 'post',
-            parameters: Form.serialize("addPolicyForm"),
-            onLoading: function() {
-                document.getElementById("addPolicyInformation").innerHTML = '<p class="info" style="text-align: center">Please Wait...</p>';
-            },
-            onSuccess: function(response) {
-                if (response.responseText === 'true') {
-                    document.getElementById("addPolicyInformation").innerHTML = 'New policy successfully added.';
-                    jQuery("#addPolicyInformation").addClass("info");
-                    setTimeout(function() {
-                        jQuery("#addPolicyFormDialog").dialog('close');
-                    }, 2000);
-                    Customer.updateCost();
-                    Policy.listPolicy();
+        var policyForm = Functions.splitSerializeForm("addPolicyForm");
+        PolicyType.validateGender(policyForm['policy_gender'], 'add');
+        if (PolicyType.genderValid) {
+            new Ajax.Request(this.getAjaxUrl(), {
+                method: 'post',
+                parameters: Form.serialize("addPolicyForm"),
+                onLoading: function() {
+                    document.getElementById("addPolicyInformation").innerHTML = '<p class="info" style="text-align: center">Please Wait...</p>';
+                },
+                onSuccess: function(response) {
+                    if (response.responseText === 'true') {
+                        document.getElementById("addPolicyInformation").innerHTML = 'New policy successfully added.';
+                        jQuery("#addPolicyInformation").addClass("info");
+                        setTimeout(function() {
+                            jQuery("#addPolicyFormDialog").dialog('close');
+                        }, 2000);
+                        Customer.updateCost();
+                        Policy.listPolicy();
+                    }
+                    else {
+                        document.getElementById("addPolicyInformation").innerHTML = 'Failed to add new policy. Please try again.';
+                        jQuery("#addPolicyInformation").addClass("error");
+                    }
                 }
-                else {
-                    document.getElementById("addPolicyInformation").innerHTML = 'Failed to add new policy. Please try again.';
-                    jQuery("#addPolicyInformation").addClass("error");
-                }
-            }
-        })
+            })
+        }
     },
     
     openUpdatePolicyForm: function() {
@@ -255,7 +259,7 @@ var Policy = Class.create({
     
     update: function() {
         var policyForm = Functions.splitSerializeForm("updatePolicyForm");
-        PolicyType.validateGender(policyForm['policy_gender']);
+        PolicyType.validateGender(policyForm['policy_gender'], 'update');
         if (PolicyType.genderValid) {
             new Ajax.Request(this.getAjaxUrl(), {
                 method: 'post',
