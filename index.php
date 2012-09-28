@@ -37,7 +37,7 @@ $script = '
 
 $template->getJs($script);
 
-$customer = new Customer;
+$customer = new Customer();
 $customer->setId($_GET['custId']);
 
 $template->show($customer);

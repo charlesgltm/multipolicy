@@ -11,6 +11,16 @@ switch ($_GET['get']) {
 }
 
 switch ($_POST['act']) {
+    
+    case 'update':
+        if ($customer->update()) {
+            echo 'true';
+        }
+        else {
+            echo 'false';
+        }
+        break;
+    
     case 'updatePolicyType':
         $customer->updatePolicyType(new PolicyType());
         break;

@@ -20,24 +20,73 @@ class Customer {
         $query = sprintf("SELECT customers.*
                           FROM customers
                           WHERE customers.id=%d",
-                          $this->id);
+                          $this->getId());
         MySQL::setQuery($query);
         return MySQL::fetchRow();
     }
     
-    public function customerForm() {
+    public function customerForm(Gender $gender) {
         $customer = $this->getCustomerDetails();
+        $gender->setGender($customer['gender']);
         return '
-            <div id="customer-form">
-                <form name="customerform" id="customerform">
+            <div id="customerInformation"></div>
+            <div id="customerForm">
+                <form name="updateCustomerForm" id="updateCustomerForm">
+                    <input type="hidden" name="act" value="update" />
+                    <input type="hidden" name="custId" value="'. $this->getId() .'" />
                     <table>
                         <tr>
                             <td>Name</td><td>:</td><td> '. $customer['customer'] .'</td>
+                        </tr>
+                        <tr>
+                            <td>Gender</td><td>:</td><td> <select name="customer_gender" class="input-text">'. $gender->getOptions('data') .'</select></td>
+                        </tr>
+                        <tr>
+                            <td>Handphone</td><td>:</td><td> '. $customer['handphone1'] .'</td>
+                        </tr>
+                        <tr>
+                            <td>Office Phone</td><td>:</td><td><input type="text" class="input-text" name="customer_officephone1" value="'. $customer['officephone1'] .'" /></td>
+                        </tr>
+                        <tr>
+                            <td>Address</td><td>:</td><td><textarea class="input-text" name="customer_address" onkeyup="Functions.textToUpper(this)">'. $customer['address'] .'</textarea></td>
+                        </tr>
+                        <tr>
+                            <td>City</td><td>:</td><td> <input type="text" class="input-text" name="customer_city" value="'. $customer['city'] .'" onkeyup="Functions.textToUpper(this)" /></td>
+                        </tr>
+                        <tr>
+                            <td>Post Code</td><td>:</td><td> <input type="text" class="input-text" name="customer_postcode" value="'. $customer['postcode'] .'" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center">
+                                <hr />
+                                <input type="button" class="button" value="Save" onclick="Customer.update()" />
+                            </td>
                         </tr>
                     </table>
                 </form>
             </div>
         ';
+    }
+    
+    public function update() {
+        $query = sprintf("UPDATE customers
+                          SET
+                            gender='%s',
+                            officephone1='%s',
+                            address='%s',
+                            city='%s',
+                            postcode='%s'
+                          WHERE id=%d",
+                          $_POST['customer_gender'],
+                          MySQL::escapeString($_POST['customer_officephone1']),
+                          MySQL::escapeString($_POST['customer_address']),
+                          MySQL::escapeString($_POST['customer_city']),
+                          MySQL::escapeString($_POST['customer_postcode']),
+                          MySQL::escapeString($_POST['custId']));
+        MySQL::setQuery($query);
+        if (MySQL::execute())
+            return true;
+        return false;
     }
     
     public function updatePolicyType(PolicyType $policyType) {

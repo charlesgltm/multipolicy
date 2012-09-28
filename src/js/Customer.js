@@ -28,6 +28,24 @@ var Customer = Class.create ({
         return(data.evalJSON());
     },
     
+    update: function() {
+        new Ajax.Request(this.getAjaxUrl(), {
+            method: 'post',
+            parameters: Form.serialize("updateCustomerForm"),
+            onSuccess: function(response) {
+                var info = '';
+                if (response.responseText == 'true') {
+                    info = 'Customer successfully saved';
+                }
+                else {
+                    info = 'Failed to save Customer info.<br />Please try again.';
+                }
+                document.getElementById("customerInformation").innerHTML = '<b>' + info + '</b>';
+                Functions.initDialog("customerInformation", "Information", 220, 150);
+            }
+        })
+    },
+    
     updatePolicyType: function() {
         PolicyType.validate('change');
         if (PolicyType.policyTypeValid) {

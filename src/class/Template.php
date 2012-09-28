@@ -166,7 +166,7 @@ class Template {
                         <li><a href="#tabCustomer">Customer</a></li>
                         <li><a href="#tabPolicy" onclick="Policy.activatingTab();Policy.activatingTab()">Policy</a></li>
                     </ul>
-                    <div id="tabCustomer">'. $customer->customerForm() .'</div>
+                    <div id="tabCustomer">'. $customer->customerForm(new Gender()) .'</div>
                     <div id="tabPolicy"></div>
                 </div>
             </div>

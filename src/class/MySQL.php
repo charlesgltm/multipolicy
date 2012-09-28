@@ -3,7 +3,7 @@
  * file		: MySQL.php
  * created	: 09 March 2012
  *
- * @package	: lig
+ * @package	: 
  * @author	: Charles
  */
 
@@ -27,7 +27,7 @@ abstract class MySQL implements Database {
         self::$currentConnection = $connection;
         switch ($connection) {
             case 'dev':
-                self::$_host = '127.0.0.1';
+                self::$_host = 'localhost';
                 self::$_port = 3306;
                 self::$_user = 'root';
                 self::$_pass = 'marlboro';
@@ -109,6 +109,14 @@ abstract class MySQL implements Database {
     }
     
     /**
+     * Method for escapes special character from Query
+     * @param string Query
+     */
+    public static function escapeString($string) {
+        return mysqli_real_escape_string(MySQL::connect(), $string);
+    }
+    
+    /**
      * Method for execute Query
      */
     public static function execute() {
@@ -140,7 +148,7 @@ abstract class MySQL implements Database {
      * @return int = Number of Rows
      */
     public static function getLastId() {
-        return mysqli_insert_id(self::connect());
+        return mysqli_insert_id(self::$link);
     }
     
     /* Method for return Last Insert ID
@@ -153,7 +161,7 @@ abstract class MySQL implements Database {
     /* Method for Show SQL Last Error
      */
     public static function showErrors() {
-        
+        return mysqli_error(self::connect());
     }
     
     /* Method for disconnect from SQL Server

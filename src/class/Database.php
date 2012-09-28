@@ -39,6 +39,12 @@ interface Database {
     public static function getQuery();
     
     /**
+     * Method for escapes special character from Query
+     * @param string Query
+     */
+    public static function escapeString($string);
+    
+    /**
      * Method for execute Query
      */
     public static function execute();

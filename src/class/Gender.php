@@ -37,7 +37,8 @@ class Gender {
         return $data;
     }
     
-    public function getOptions() {
+    public function getOptions($data = 'code') {
+        $data = ($data == 'code') ? 'list_code' : 'list_data';
         $query = sprintf("SELECT list_values.list_code,
                           list_values.list_data
                           FROM list_values
@@ -48,7 +49,7 @@ class Gender {
         MySQL::setQuery($query);
         foreach (MySQL::fetchRows() as $key => $value) {
             $selected = ($this->gender == $value['list_data']) ? ' selected="selected"' : '';
-            $options .= '<option value="'. $value['list_code'] .'" '. $selected .'>'. $value['list_data'] .'</option>';
+            $options .= '<option value="'. $value[$data] .'" '. $selected .'>'. $value['list_data'] .'</option>';
         }
         return $options;
     }
