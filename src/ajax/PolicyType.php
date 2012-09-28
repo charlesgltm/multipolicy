@@ -22,7 +22,6 @@ switch ($_GET['get']) {
     
     case 'validateGender':
         echo $policyType->validateGender(new Customer(), new Policy(), new Gender());
-        //echo 'bijiq';
         break;
 }
 ?>
